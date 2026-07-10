@@ -97,7 +97,7 @@ export default function App() {
       </Routes>
 
       <footer className="footer">
-        Digital Directory — find your people · Built with React & Supabase
+        Digital Directory - find your people · Built by Revanth Gowda
       </footer>
     </div>
   )

@@ -45,10 +45,12 @@ export default function AuthPage() {
           <h2>{mode === 'signin' ? 'Welcome back' : 'Create your profile'}</h2>
           <form onSubmit={handleSubmit}>
             <label>Email</label>
-            <input type="email" value={email} required
+            <input type="email" name="email" autoComplete="email" value={email} required
               onChange={(e) => setEmail(e.target.value)} />
             <label>Password</label>
-            <input type="password" value={password} required minLength={6}
+            <input type="password" name="password"
+              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+              value={password} required minLength={6}
               onChange={(e) => setPassword(e.target.value)} />
             <button type="submit" disabled={busy} className="full-width">
               {mode === 'signin' ? 'Sign in' : 'Sign up'}

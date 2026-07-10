@@ -75,7 +75,13 @@ export default function UserProfilePage() {
       <Link className="link-btn" to="/">← Back to Discover</Link>
     </div>
   )
-  if (!profile || !data) return <div className="card muted">Loading profile…</div>
+  if (!profile || !data) return (
+    <div aria-busy="true" aria-label="Loading profile">
+      <div className="skeleton" style={{ height: 260, borderRadius: 24, marginBottom: '1rem' }} />
+      <div className="skeleton" style={{ height: 90, marginBottom: '1rem' }} />
+      <div className="skeleton" style={{ height: 180 }} />
+    </div>
+  )
 
   const name = profile.full_name || profile.username
   const initial = name.charAt(0).toUpperCase()

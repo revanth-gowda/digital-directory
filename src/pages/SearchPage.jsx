@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 
 const SOURCES = ['all', 'profile', 'hobbies', 'jobs', 'travel', 'projects', 'blogs']
-const SUGGESTIONS = ['gaming', 'Formula 1', 'Tokyo', 'photography', 'AI', 'street food']
+const SUGGESTIONS = ['Gaming', 'Formula 1', 'Tokyo', 'Photography', 'AI', 'Street Food']
 const PAGE_SIZE = 12
 
 export default function SearchPage() {
@@ -75,15 +75,13 @@ export default function SearchPage() {
   return (
     <div>
       <section className="hero-banner">
-        <div className="blob blob-1" />
-        <div className="blob blob-2" />
         <h1 className="hb-title">Everyone interesting.<br />One simple directory.</h1>
         <p className="hb-sub">
-          Real people, rich profiles. Search by hobbies, work, cities, projects — or anything in their blogs.
+          Real people, rich profiles. Search by hobbies, work, cities, projects or anything in their blogs.
         </p>
         <input
           className="hb-search"
-          placeholder="Try “Formula 1”, “photography”, “Tokyo”…"
+          placeholder="Try “Formula 1”, “Photography”, “Tokyo”…"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
           autoFocus
@@ -116,9 +114,22 @@ export default function SearchPage() {
           {searching && <p className="muted">Searching…</p>}
           {error && <p className="error">{error}</p>}
           {!searching && visible.length === 0 && (
-            <p className="muted">
-              {results.length > 0 ? 'No matches in this category.' : 'No matches. Try another word.'}
-            </p>
+            <div>
+              <p className="muted">
+                {results.length > 0
+                  ? 'No matches in this category — try All.'
+                  : `Nobody matched “${term}”. These always work:`}
+              </p>
+              {results.length === 0 && (
+                <div className="filter-row">
+                  {SUGGESTIONS.map((s) => (
+                    <button key={s} type="button" className="filter" onClick={() => setTerm(s)}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
           {visible.map((r) => <ResultCard key={r.id} result={r} />)}
