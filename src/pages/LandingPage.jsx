@@ -44,7 +44,7 @@ export default function LandingPage() {
             <h1 className="ld-h ld-h-xl">Everyone interesting. One simple directory.</h1>
             <p className="ld-p">
               Build a profile that's actually you — hobbies, work, travels, projects, photos and
-              blogs — and get found for any of it. One search box across everything.
+              blogs and get found for any of it. One search box across everything.
             </p>
             <div className="ld-cta-row">
               <Link className="ld-btn ld-btn-dark ld-btn-lg" to="/login">Claim your profile</Link>

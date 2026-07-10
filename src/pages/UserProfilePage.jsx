@@ -126,6 +126,8 @@ export default function UserProfilePage() {
         {data.blogs.length > 0 && <a className="filter" href="#notes" onClick={jump('notes')}>Notes</a>}
       </nav>
 
+      <div className="pp-grid">
+      <div className="pp-side">
       {/* Hobbies as chips, right under the hero */}
       {data.hobbies.length > 0 && (
         <div className="card reveal">
@@ -184,6 +186,9 @@ export default function UserProfilePage() {
         </section>
       )}
 
+      </div>
+
+      <div className="pp-main">
       {/* 3. Creative lens — lightbox media gallery */}
       {data.media.length > 0 && (
         <section id="media" className="card reveal">
@@ -231,6 +236,9 @@ export default function UserProfilePage() {
           </div>
         </section>
       )}
+
+      </div>
+      </div>
 
       <div className="reveal" style={{ textAlign: 'center', margin: '2rem 0' }}>
         <Link className="link-btn" to="/discover">← Back to Discover</Link>

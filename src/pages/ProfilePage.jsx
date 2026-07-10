@@ -67,7 +67,7 @@ export default function ProfilePage({ session }) {
   const initial = (profile.full_name || profile.username || '?').charAt(0).toUpperCase()
 
   return (
-    <div>
+    <div className="narrow">
       <form onSubmit={saveProfile} className="card">
         <div className="profile-head">
           <label className="avatar-upload" title="Change photo">

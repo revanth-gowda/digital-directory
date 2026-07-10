@@ -81,7 +81,7 @@ export default function SearchPage() {
         </p>
         <input
           className="hb-search"
-          placeholder="Try “Formula 1”, “Photography”, “Tokyo”…"
+          placeholder="Try “Formula 1”, “photography”, “Tokyo”…"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
           autoFocus
@@ -132,7 +132,9 @@ export default function SearchPage() {
             </div>
           )}
 
-          {visible.map((r) => <ResultCard key={r.id} result={r} />)}
+          <div className="results-grid">
+            {visible.map((r, i) => <ResultCard key={r.id} result={r} delay={i * 0.05} />)}
+          </div>
         </div>
       ) : (
         <section className="card">
@@ -140,7 +142,9 @@ export default function SearchPage() {
             Members{total != null && ` · ${members.length} of ${total}`}
           </h2>
           <div className="member-grid">
-            {members.map((m) => <MemberCard key={m.id} member={m} />)}
+            {members.map((m, i) => (
+              <MemberCard key={m.id} member={m} delay={(i % PAGE_SIZE) * 0.045} />
+            ))}
           </div>
           <div ref={sentinelRef} />
           {loadingMore && <p className="muted" style={{ textAlign: 'center' }}>Loading more…</p>}
@@ -160,12 +164,12 @@ export default function SearchPage() {
   )
 }
 
-function MemberCard({ member }) {
+function MemberCard({ member, delay = 0 }) {
   const navigate = useNavigate()
   const name = member.full_name || member.username || 'New member'
   const initial = name.charAt(0).toUpperCase()
   return (
-    <div className="member-card"
+    <div className="member-card enter" style={{ '--d': `${delay}s` }}
       onClick={() => member.username && navigate(`/u/${member.username}`)}
       title={member.username ? `View @${member.username}` : undefined}>
       {member.avatar_url
@@ -177,12 +181,13 @@ function MemberCard({ member }) {
   )
 }
 
-function ResultCard({ result }) {
+function ResultCard({ result, delay = 0 }) {
   const navigate = useNavigate()
   const initial = (result.full_name || result.username || '?').charAt(0).toUpperCase()
   const canOpen = !!result.username
   return (
-    <div className="result-card" onClick={() => canOpen && navigate(`/u/${result.username}`)}>
+    <div className="result-card enter" style={{ '--d': `${delay}s` }}
+      onClick={() => canOpen && navigate(`/u/${result.username}`)}>
       <div className="result-head">
         <div className="result-id">
           {result.avatar_url
