@@ -1,22 +1,37 @@
 // ---------------------------------------------------------------
-// Phase 5 updates: results show avatars, a 'blogs' badge can
-// appear (blog text is searchable now), and expanded cards show
-// photos, blog titles and the full profile.
+// The Discover page is now a proper landing experience:
+//   - hero with gradient headline + rounded hero search
+//   - one-tap suggestion chips (seed queries)
+//   - "Newest members" grid when nothing is searched
+//   - source filter pills + result cards while searching
 // ---------------------------------------------------------------
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 
+const SOURCES = ['all', 'profile', 'hobbies', 'jobs', 'travel', 'projects', 'blogs']
+const SUGGESTIONS = ['gaming', 'engineer', 'Tokyo', 'chess', 'react', 'photography']
+
 export default function SearchPage() {
   const [term, setTerm] = useState('')
   const [results, setResults] = useState([])
+  const [filter, setFilter] = useState('all')
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState(null)
+  const [members, setMembers] = useState([])
+
+  const active = term.trim().length >= 2
+
+  // Newest members for the browse/landing state — loaded once
+  useEffect(() => {
+    supabase.from('profiles')
+      .select('id, username, full_name, bio, avatar_url')
+      .order('created_at', { ascending: false })
+      .limit(8)
+      .then(({ data }) => setMembers(data ?? []))
+  }, [])
 
   useEffect(() => {
-    if (term.trim().length < 2) {
-      setResults([])
-      return
-    }
+    if (!active) { setResults([]); setFilter('all'); return }
     const timer = setTimeout(async () => {
       setSearching(true)
       const { data, error } = await supabase.rpc('search_directory', { term })
@@ -25,26 +40,87 @@ export default function SearchPage() {
       setSearching(false)
     }, 300)
     return () => clearTimeout(timer)
-  }, [term])
+  }, [term, active])
+
+  const visible = filter === 'all'
+    ? results
+    : results.filter((r) => r.matched_in.includes(filter))
 
   return (
-    <div className="card">
-      <h2>Discover people</h2>
-      <input
-        className="search-input"
-        placeholder="Search hobbies, jobs, places, projects, blogs…"
-        value={term}
-        onChange={(e) => setTerm(e.target.value)}
-        autoFocus
-      />
+    <div>
+      <section className="hero">
+        <h1 className="hero-title">Find your people</h1>
+        <p className="hero-sub">
+          Search the community by hobbies, work, cities, projects — or anything in their blogs.
+        </p>
+        <input
+          className="search-input hero-search"
+          placeholder="Try “gaming”, “react developer”, “Tokyo”…"
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          autoFocus
+        />
+        {!active && (
+          <div className="suggest-row">
+            {SUGGESTIONS.map((s) => (
+              <button key={s} type="button" className="filter" onClick={() => setTerm(s)}>
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
 
-      {searching && <p className="muted">Searching…</p>}
-      {error && <p className="error">{error}</p>}
-      {!searching && term.trim().length >= 2 && results.length === 0 && (
-        <p className="muted">No matches. Try another word.</p>
+      {active ? (
+        <div className="card">
+          {results.length > 0 && (
+            <div className="filter-row">
+              {SOURCES.map((src) => (
+                <button key={src} type="button"
+                  className={`filter ${filter === src ? 'active' : ''}`}
+                  onClick={() => setFilter(src)}>
+                  {src === 'all' ? 'All' : src}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {searching && <p className="muted">Searching…</p>}
+          {error && <p className="error">{error}</p>}
+          {!searching && visible.length === 0 && (
+            <p className="muted">
+              {results.length > 0 ? 'No matches in this category.' : 'No matches. Try another word.'}
+            </p>
+          )}
+
+          {visible.map((r) => <ResultCard key={r.id} result={r} />)}
+        </div>
+      ) : (
+        members.length > 0 && (
+          <section className="card">
+            <h2 className="section-label">Newest members</h2>
+            <div className="member-grid">
+              {members.map((m) => <MemberCard key={m.id} member={m} onFind={setTerm} />)}
+            </div>
+          </section>
+        )
       )}
+    </div>
+  )
+}
 
-      {results.map((r) => <ResultCard key={r.id} result={r} />)}
+function MemberCard({ member, onFind }) {
+  const name = member.full_name || member.username || 'New member'
+  const initial = name.charAt(0).toUpperCase()
+  return (
+    <div className="member-card"
+      onClick={() => member.username && onFind(member.username)}
+      title={member.username ? `Search @${member.username}` : undefined}>
+      {member.avatar_url
+        ? <img src={member.avatar_url} alt="" className="avatar avatar-md" />
+        : <div className="avatar avatar-md avatar-fallback">{initial}</div>}
+      <div className="row-main">{name}</div>
+      {member.bio && <div className="row-sub clamp-1">{member.bio}</div>}
     </div>
   )
 }
@@ -110,19 +186,21 @@ function ResultCard({ result }) {
           )}
           {Object.entries(details.sections).map(([section, rows]) =>
             rows.length > 0 && (
-              <div key={section}>
-                <strong>{section}:</strong>{' '}
-                {rows.map(([main, extra], i) => (
-                  <span key={i}>
-                    {main}{extra ? ` (${extra})` : ''}{i < rows.length - 1 ? ' · ' : ''}
-                  </span>
-                ))}
+              <div key={section} className="detail-group">
+                <span className="detail-label">{section}</span>
+                <div className="pill-row">
+                  {rows.map(([main, extra], i) => (
+                    <span key={i} className="pill" title={extra || undefined}>
+                      {main}
+                    </span>
+                  ))}
+                </div>
               </div>
             )
           )}
         </div>
       )}
-      <div className="muted small-text">{open ? '▲ collapse' : '▼ view full profile'}</div>
+      <div className="meta">{open ? '▲ collapse' : '▼ view full profile'}</div>
     </div>
   )
 }

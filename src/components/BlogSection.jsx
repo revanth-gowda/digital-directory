@@ -7,6 +7,7 @@
 // ---------------------------------------------------------------
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
+import { TrashIcon } from './Icons'
 
 export default function BlogSection({ userId }) {
   const [posts, setPosts] = useState([])
@@ -80,9 +81,9 @@ function BlogPost({ post, onDelete }) {
     <article className="blog-post">
       <div className="section-head">
         <h3 onClick={() => setOpen(!open)}>{post.title}</h3>
-        <button className="danger small" onClick={onDelete}>Delete</button>
+        <button className="icon-btn" aria-label="Delete post" onClick={onDelete}><TrashIcon /></button>
       </div>
-      <p className="muted small-text">{date}</p>
+      <p className="meta">{date}</p>
       <p className={open ? '' : 'clamp'}>{post.content}</p>
       <button className="link-btn" onClick={() => setOpen(!open)}>
         {open ? 'Show less' : 'Read more'}

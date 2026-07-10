@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { supabase } from '../supabaseClient'
+import { TrashIcon } from './Icons'
 import { CITIES } from '../data/cities'
 
 const VISITED = '#4f46e5'
@@ -143,12 +144,13 @@ export default function TravelMap({ userId }) {
 
       <ul className="travel-list">
         {travels.map((t) => (
-          <li key={t.id}>
+          <li key={t.id} className="list-row">
             <div>
               <strong>{t.place}</strong>
               {t.detail && <span className="muted"> — {t.detail}</span>}
             </div>
-            <button className="danger small" onClick={() => remove(t.id)}>Delete</button>
+            <button className="icon-btn" aria-label={`Delete ${t.place}`}
+              onClick={() => remove(t.id)}><TrashIcon /></button>
           </li>
         ))}
       </ul>

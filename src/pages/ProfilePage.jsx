@@ -74,7 +74,7 @@ export default function ProfilePage({ session }) {
             {profile.avatar_url
               ? <img src={profile.avatar_url} alt="Your avatar" className="avatar avatar-lg" />
               : <div className="avatar avatar-lg avatar-fallback">{initial}</div>}
-            <span className="avatar-edit">Edit</span>
+            <span className="avatar-overlay">Change Avatar</span>
             <input type="file" accept="image/*" hidden onChange={uploadAvatar} />
           </label>
           <div className="profile-head-fields">
@@ -96,7 +96,7 @@ export default function ProfilePage({ session }) {
 
       <div className="card">
         <ListSection
-          title="Hobbies" table="hobbies" userId={user.id}
+          title="Hobbies" table="hobbies" userId={user.id} variant="pills"
           fields={[
             { name: 'name', label: 'Hobby (e.g. chess)', required: true },
             { name: 'detail', label: 'Detail (optional)' },
@@ -111,7 +111,7 @@ export default function ProfilePage({ session }) {
           ]}
         />
         <ListSection
-          title="Projects" table="projects" userId={user.id}
+          title="Projects" table="projects" userId={user.id} variant="cards"
           fields={[
             { name: 'name', label: 'Project name', required: true },
             { name: 'detail', label: 'What it does / tech' },
