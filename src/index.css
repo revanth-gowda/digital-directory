@@ -594,3 +594,12 @@ html { scroll-behavior: smooth; }
 }
 .hb-chip:hover { background: #d2e823; border-color: #d2e823; color: #1e1b4b; box-shadow: none; }
 [data-theme="dark"] .hero-banner { background: #171533; }
+
+/* ---- Public browsing (phase 6) ---- */
+.navlink.cta { background: var(--brand); color: white; }
+.navlink.cta:hover { background: var(--brand-dark); color: white; }
+[data-theme="dark"] .navlink.cta { color: #0b1220; }
+.auth-layout {
+  min-height: calc(100vh - 200px); border-radius: 24px;
+  overflow: hidden; border: 1px solid var(--line);
+}
