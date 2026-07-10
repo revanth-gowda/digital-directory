@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
+import Logo from '../components/Logo'
 
 export default function AuthPage() {
   const [mode, setMode] = useState('signin')
@@ -32,7 +33,7 @@ export default function AuthPage() {
     <div className="auth-layout">
       <div className="auth-brand">
         <div>
-          <div className="logo-mark">DD</div>
+          <Logo size={56} />
           <h1>Digital Directory</h1>
           <p>Rich profiles. Real people. Find anyone by what they love,
              where they've been, and what they've built.</p>

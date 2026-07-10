@@ -13,7 +13,9 @@ import { supabase } from './supabaseClient'
 import AuthPage from './pages/AuthPage'
 import ProfilePage from './pages/ProfilePage'
 import SearchPage from './pages/SearchPage'
+import UserProfilePage from './pages/UserProfilePage'
 import { SunIcon, MoonIcon } from './components/Icons'
+import Logo from './components/Logo'
 
 export default function App() {
   const [session, setSession] = useState(null)
@@ -57,7 +59,10 @@ export default function App() {
   return (
     <div className="page">
       <header className="topbar">
-        <h1 className="brand"><span className="brand-dot" />Digital Directory</h1>
+        <NavLink to="/" className="brand" aria-label="Digital Directory home">
+          <Logo size={30} />
+          <span>Digital Directory</span>
+        </NavLink>
         <nav>
           <NavLink to="/" end className={({ isActive }) => isActive ? 'navlink active' : 'navlink'}>
             Discover
@@ -79,6 +84,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<SearchPage />} />
         <Route path="/profile" element={<ProfilePage session={session} />} />
+        <Route path="/u/:username" element={<UserProfilePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
