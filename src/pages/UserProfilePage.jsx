@@ -72,7 +72,7 @@ export default function UserProfilePage() {
   if (notFound) return (
     <div className="card">
       <p>No profile named <strong>@{username}</strong>.</p>
-      <Link className="link-btn" to="/">← Back to Discover</Link>
+      <Link className="link-btn" to="/discover">← Back to Discover</Link>
     </div>
   )
   if (!profile || !data) return (
@@ -233,7 +233,7 @@ export default function UserProfilePage() {
       )}
 
       <div className="reveal" style={{ textAlign: 'center', margin: '2rem 0' }}>
-        <Link className="link-btn" to="/">← Back to Discover</Link>
+        <Link className="link-btn" to="/discover">← Back to Discover</Link>
       </div>
 
       {/* Lightbox */}

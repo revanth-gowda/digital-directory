@@ -8,11 +8,12 @@
 //   /login with a session      -> /profile
 // ---------------------------------------------------------------
 import { useState, useEffect } from 'react'
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import AuthPage from './pages/AuthPage'
 import ProfilePage from './pages/ProfilePage'
 import SearchPage from './pages/SearchPage'
+import LandingPage from './pages/LandingPage'
 import UserProfilePage from './pages/UserProfilePage'
 import { SunIcon, MoonIcon } from './components/Icons'
 import Logo from './components/Logo'
@@ -53,7 +54,13 @@ export default function App() {
     localStorage.setItem('theme', next)
   }
 
+  const { pathname } = useLocation()
+  const isLanding = !session && pathname === '/'
+
   if (loading) return <div className="container">Loading…</div>
+
+  // The marketing landing renders full-bleed, without the app chrome
+  if (isLanding) return <LandingPage />
 
   return (
     <div className="page">
@@ -63,7 +70,7 @@ export default function App() {
           <span>Digital Directory</span>
         </NavLink>
         <nav>
-          <NavLink to="/" end className={({ isActive }) => isActive ? 'navlink active' : 'navlink'}>
+          <NavLink to="/discover" className={({ isActive }) => isActive ? 'navlink active' : 'navlink'}>
             Discover
           </NavLink>
           {session && (
@@ -87,7 +94,8 @@ export default function App() {
       </header>
 
       <Routes>
-        <Route path="/" element={<SearchPage />} />
+        <Route path="/" element={<Navigate to="/discover" replace />} />
+        <Route path="/discover" element={<SearchPage />} />
         <Route path="/u/:username" element={<UserProfilePage />} />
         <Route path="/login"
           element={session ? <Navigate to="/profile" replace /> : <AuthPage />} />

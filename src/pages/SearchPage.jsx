@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 
 const SOURCES = ['all', 'profile', 'hobbies', 'jobs', 'travel', 'projects', 'blogs']
-const SUGGESTIONS = ['Gaming', 'Formula 1', 'Tokyo', 'Photography', 'AI', 'Street Food']
+const SUGGESTIONS = ['gaming', 'Formula 1', 'Tokyo', 'photography', 'AI', 'street food']
 const PAGE_SIZE = 12
 
 export default function SearchPage() {
@@ -77,7 +77,7 @@ export default function SearchPage() {
       <section className="hero-banner">
         <h1 className="hb-title">Everyone interesting.<br />One simple directory.</h1>
         <p className="hb-sub">
-          Real people, rich profiles. Search by hobbies, work, cities, projects or anything in their blogs.
+          Real people, rich profiles. Search by hobbies, work, cities, projects — or anything in their blogs.
         </p>
         <input
           className="hb-search"
